@@ -78,7 +78,7 @@ function Customizer() {
 
     state[decalType.stateProperty] = result;
 
-    if (!activeFilterTab[decalType.stateProperty]) {
+    if (!activeFilterTab[decalType.filterTab]) {
       hanldeActiveFilterTab(decalType.filterTab);
     }
   };
@@ -153,7 +153,7 @@ function Customizer() {
           >
             {FilterTabs.map((tab) => (
               <Tab
-                key={tab.key}
+                key={tab.name}
                 tab={tab}
                 isFilterTab
                 isActiveTab={activeFilterTab[tab.name]}
