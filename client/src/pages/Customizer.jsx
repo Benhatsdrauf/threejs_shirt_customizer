@@ -35,9 +35,41 @@ function Customizer() {
       case "filepicker":
         return <FilePicker file={file} setFile={setFile} readFile={readFile} />;
       case "aipicker":
-        return <AIPicker />;
+        return (
+          <AIPicker
+            promt={promt}
+            setPromt={setPromt}
+            generatingImg={generatingImg}
+            handleSubmit={handleSubmit}
+          />
+        );
       default:
         return null;
+    }
+  };
+
+  const handleSubmit = async (type) => {
+    if (!promt) return alert("Please enter a promt");
+
+    try {
+      setGeneratingImg(true);
+
+      // call backend to generate ai image!
+      const response = await fetch(`http://localhost:8080/api/v1/dalle`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ promt }),
+      });
+
+      const data = await response.json();
+      handleDecals(type, `data:image/png;base64,${data.photo}`);
+    } catch (error) {
+      alert(error);
+    } finally {
+      setGeneratingImg(false);
+      setActiveEditorTab("");
     }
   };
 
@@ -58,10 +90,11 @@ function Customizer() {
         break;
       case "stylishShirt":
         state.isFullTexture = !activeFilterTab[tabName];
-
+        break;
       default:
         state.isLogoTexture = true;
         state.isFullTexture = false;
+        break;
     }
 
     // after setting the state we need to set activeFilterState
@@ -93,7 +126,7 @@ function Customizer() {
               <div className="editortabs-container tabs">
                 {EditorTabs.map((tab) => (
                   <Tab
-                    key={tab.key}
+                    key={tab.name}
                     tab={tab}
                     handleClick={() => setActiveEditorTab(tab.name)}
                   />
