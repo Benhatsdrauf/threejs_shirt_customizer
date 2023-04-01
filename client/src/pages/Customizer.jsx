@@ -35,29 +35,9 @@ function Customizer() {
       case "filepicker":
         return <FilePicker file={file} setFile={setFile} readFile={readFile} />;
       case "aipicker":
-        return (
-          <AIPicker
-            promt={promt}
-            setPromt={setPromt}
-            generatingImg={generatingImg}
-            handleSubmit={hanldeSubmit}
-          />
-        );
+        return <AIPicker />;
       default:
         return null;
-    }
-  };
-
-  const handleSubmit = async (type) => {
-    if (!promt) return alert("Please enter a promt");
-
-    try {
-      // call backend to generate ai image!
-    } catch (error) {
-      alert(error);
-    } finally {
-      setGeneratingImg(false);
-      setActiveEditorTab("");
     }
   };
 
