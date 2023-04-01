@@ -1,15 +1,15 @@
 import React from "react";
 import CustomButton from "./CustomButton";
 
-const AIPicker = ({ promt, setPromt, generatingImg, handleSubmit }) => {
+const AIPicker = ({ prompt, setPrompt, generatingImg, handleSubmit }) => {
   return (
     <div className="aipicker-container">
       <textarea
         className="aipicker-textarea"
         placeholder="Ask AI.."
         rows={5}
-        value={promt}
-        onChange={(e) => setPromt(e.target.value)}
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
       />
       <div className="flex flex-wrap gap-3">
         {generatingImg ? (

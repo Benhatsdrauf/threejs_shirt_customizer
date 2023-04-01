@@ -18,7 +18,7 @@ import {
 function Customizer() {
   const snap = useSnapshot(state);
   const [file, setFile] = useState("");
-  const [promt, setPromt] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [generatingImg, setGeneratingImg] = useState(false);
 
   const [activeEditorTab, setActiveEditorTab] = useState("");
@@ -37,8 +37,8 @@ function Customizer() {
       case "aipicker":
         return (
           <AIPicker
-            promt={promt}
-            setPromt={setPromt}
+            prompt={prompt}
+            setPrompt={setPrompt}
             generatingImg={generatingImg}
             handleSubmit={handleSubmit}
           />
@@ -49,7 +49,7 @@ function Customizer() {
   };
 
   const handleSubmit = async (type) => {
-    if (!promt) return alert("Please enter a promt");
+    if (!prompt) return alert("Please enter a prompt");
 
     try {
       setGeneratingImg(true);
@@ -60,7 +60,7 @@ function Customizer() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ promt }),
+        body: JSON.stringify({ prompt }),
       });
 
       const data = await response.json();
