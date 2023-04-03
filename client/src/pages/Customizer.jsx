@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import config from "../config/config";
 import state from "../store";
-import { download } from "../assets";
-import { downloadCanvasToImage, reader } from "../config/helpers";
+import { reader } from "../config/helpers";
 import { EditorTabs, FilterTabs, DecalTypes } from "../config/constants";
 import { fadeAnimation, slideAnimation } from "../config/motion";
 import { useSnapshot } from "valtio";
+import { Configuration, OpenAIApi } from "openai";
 import {
   AIPicker,
   ColorPicker,
@@ -26,6 +25,12 @@ function Customizer() {
     logoShirt: true,
     stylishShirt: false,
   });
+
+  const config = new Configuration({
+    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  });
+
+  const openai = new OpenAIApi(config);
 
   // show tab content depending on active tab
   const generateTabContent = () => {
@@ -54,17 +59,16 @@ function Customizer() {
     try {
       setGeneratingImg(true);
 
-      // call backend to generate ai image!
-      const response = await fetch(`http://localhost:8080/api/v1/dalle`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt }),
+      const response = await openai.createImage({
+        prompt,
+        n: 1,
+        size: "1024x1024",
+        response_format: "b64_json",
       });
 
-      const data = await response.json();
-      handleDecals(type, `data:image/png;base64,${data.photo}`);
+      const image = response.data.data[0].b64_json;
+
+      handleDecals(type, `data:image/png;base64,${image}`);
     } catch (error) {
       alert(error);
     } finally {
